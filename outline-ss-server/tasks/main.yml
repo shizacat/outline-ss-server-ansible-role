@@ -1,0 +1,74 @@
+---
+# tasks file for outline-ss-server
+- name: Check current version
+  shell: |
+    if [ -e {{ oss_s__bin }} ]; then
+      {{ oss_s__bin }} -version 2>&1;
+    else
+      echo '0.0.0';
+    fi
+  register: oss_s__current_version_cmd
+  changed_when: false
+
+- name: Set current version as fact
+  set_fact:
+    oss_s__current_version: "{{ oss_s__current_version_cmd.stdout }}"
+
+- name: Download binary
+  get_url:
+    checksum: "{{ oss_s__linux_amd64_pkg_checksum }}"
+    dest: /tmp/oss_s.tar.gz
+    url: "{{ oss_s__linux_amd64_pkg_url }}"
+  when: oss_s__current_version is version(oss_s__pkg_version, '<')
+  notify:
+    - install service
+    - cleanup
+
+- name: Create destination bin dir
+  file:
+    path: "{{ oss_s__bin_dir }}"
+    state: directory
+
+- name: Create destination config dir
+  file:
+    path: "{{ oss_s__config_dir }}"
+    state: directory
+
+- name: Extract
+  unarchive:
+    src: /tmp/oss_s.tar.gz
+    remote_src: true
+    dest: "{{ oss_s__bin_dir }}"
+    owner: root
+    group: root
+    mode: '0755'
+  when: oss_s__current_version is version(oss_s__pkg_version, '<')
+  notify: cleanup
+
+- name: Create service user
+  user:
+    name: outline_ss_server
+    system: true
+  when: oss_s__current_version is version(oss_s__pkg_version, '<')
+
+- name: Create default config file
+  copy:
+    content: ""
+    dest: "{{ oss_s__config_dir }}/config.yaml"
+    force: false
+    group: root
+    owner: root
+    mode: 0550
+
+# Setup service
+
+- name: Install service
+  template:
+    src: outline_ss_server.systemd.j2
+    dest: /lib/systemd/system/outline_ss_server.service
+    owner: root
+    group: root
+    mode: '0522'
+  notify:
+    - install service
+    - cleanup

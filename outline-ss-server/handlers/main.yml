@@ -1,0 +1,16 @@
+---
+# handlers file for outline-ss-server
+- name: restart service
+  ansible.builtin.service:
+    name: outline_ss_server
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+  listen: install service
+
+- name: cleanup
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /tmp/oss_s.tar.gz

@@ -1,0 +1,12 @@
+---
+# defaults file for outline-ss-server
+oss_s__bin_dir: /opt/shadowsocks
+oss_s__config_dir: /etc/shadowsocks
+
+# Packages
+oss_s__pkg_version: 1.4.0
+oss_s__linux_amd64_pkg_checksum: sha256:f51bcb6391cca0ae828620c429e698a3b7c409de2374c52f113ca9a525e021a8
+
+# Build
+oss_s__bin: "{{ oss_s__bin_dir }}/outline-ss-server"
+oss_s__linux_amd64_pkg_url: "https://github.com/Jigsaw-Code/outline-ss-server/releases/download/v{{ oss_s__pkg_version }}/outline-ss-server_{{ oss_s__pkg_version }}_linux_x86_64.tar.gz"

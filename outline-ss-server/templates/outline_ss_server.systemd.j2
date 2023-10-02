@@ -1,0 +1,16 @@
+[Unit]
+Description=outline_ss_server - ShadowSocks server
+Documentation=https://github.com/Jigsaw-Code/outline-ss-server
+After=network.target
+
+[Service]
+User=root
+Group=root
+
+ExecStart={{ oss_s__bin }} -config {{ oss_s__config_dir }}/config.yaml
+
+SyslogIdentifier=outline_ss_server
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
