@@ -1,6 +1,6 @@
-# The ansible role for Outlinse ss server
+# The ansible role for Outlinse shadowsocks (ss) server
 
-This role will install only outline-ss server on your server.
+This role will install only outline-ss server on your server as systemd service.
 
 # Development
 
