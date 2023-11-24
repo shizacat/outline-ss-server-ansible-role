@@ -8,6 +8,7 @@ User=root
 Group=root
 
 ExecStart={{ oss_s__bin }} -config {{ oss_s__config_dir }}/config.yaml
+ExecReload=kill -HUP $MAINPID
 
 SyslogIdentifier=outline_ss_server
 Restart=always
